@@ -6,6 +6,7 @@ on: [push]
 permissions:
   id-token: write
   contents: read
+  pull-requests: read
 
 jobs:
   Train-Bird-or-Forest-Model:
@@ -55,6 +56,12 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
           uv run src/stages/data_load_train.py --config=params.yaml
+
+      - name: Comment with report in PR
+        working-directory: bird_or_forest
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
           echo '![](reports/confusion_matrix.jpg "Confusion Matrix")' >> report.md
           cml comment create report.md
 
