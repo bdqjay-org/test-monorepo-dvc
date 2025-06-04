@@ -1,0 +1,10 @@
+base:
+  random_state: 42
+
+data:
+  raw_data_path: "data/raw"
+
+data_block:
+  validation_size: 0.2
+  img_resize_value: 192
+  batch_size: 32
