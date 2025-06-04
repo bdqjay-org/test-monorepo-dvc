@@ -21,6 +21,8 @@ jobs:
       - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
       - run: echo "🖥️ The workflow is now ready to test your code on the runner."
 
+      - uses: iterative/setup-cml@v1
+
       - name: Install uv
         uses: astral-sh/setup-uv@v5
         with:
@@ -48,7 +50,10 @@ jobs:
 
       - name: Run ML Pipeline
         working-directory: bird_or_forest
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          uv run src/stages/data_load_train.py
+          uv run src/stages/data_load_train.py --config=params.yaml
+          cml comment create --pr --publish metrics.json
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
