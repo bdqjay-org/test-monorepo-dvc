@@ -8,6 +8,10 @@ stages:
       md5: 7d5dbbf29a1f87143bdf61e25a9f7c9f.dir
       size: 11201003
       nfiles: 357
+    - path: src/stages/data_load_train.py
+      hash: md5
+      md5: c1b39f889b93f057ee0fd8633ed1408e
+      size: 1683
     params:
       params.yaml:
         base:
