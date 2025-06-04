@@ -1,0 +1,49 @@
+repos:
+  - repo: https://github.com/psf/black-pre-commit-mirror
+    rev: 25.1.0
+    hooks:
+      - id: black
+        language_version: python3.10
+  - repo: https://github.com/PyCQA/flake8
+    rev: 7.2.0
+    hooks:
+      - id: flake8
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.16.0
+    hooks:
+      - id: mypy
+        args:
+          [
+            --disallow-untyped-defs,
+            --disallow-incomplete-defs,
+            --disallow-untyped-calls,
+            --ignore-missing-imports,
+          ]
+        additional_dependencies: [types-requests, types-PyYAML]
+  - repo: https://github.com/asottile/reorder_python_imports
+    rev: v3.15.0
+    hooks:
+      - id: reorder-python-imports
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.7.10
+    hooks:
+      - id: uv-lock
+  - repo: https://github.com/iterative/dvc
+    rev: main
+    hooks:
+      - id: dvc-pre-commit
+        additional_dependencies: [".[all]"]
+        language_version: python3
+        stages:
+          - commit
+      - id: dvc-pre-push
+        additional_dependencies: [".[all]"]
+        language_version: python3
+        stages:
+          - push
+      - id: dvc-post-checkout
+        additional_dependencies: [".[all]"]
+        language_version: python3
+        stages:
+          - post-checkout
+        always_run: true
