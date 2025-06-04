@@ -4,6 +4,7 @@ from typing import Text
 
 import yaml
 from fastai.vision.all import CategoryBlock
+from fastai.vision.all import ClassificationInterpretation
 from fastai.vision.all import DataBlock
 from fastai.vision.all import error_rate
 from fastai.vision.all import get_image_files
@@ -15,6 +16,7 @@ from fastai.vision.all import resnet18
 from fastai.vision.all import vision_learner
 
 from shared.utils import get_git_root
+from shared.utils import save_confusion_matrix
 
 
 def data_load_train(config_path: Text) -> None:
@@ -44,10 +46,16 @@ def data_load_train(config_path: Text) -> None:
     print(f"  - Error Rate: {results[1]:.4f}")
 
     root = get_git_root()
-    metrics_file_path = root / "bird_or_forest" / "reports" / "metrics.json"
+    reports_file_path = root / "bird_or_forest" / "reports"
+    metrics_file_path = reports_file_path / "metrics.json"
     metrics_file_path.parent.mkdir(parents=True, exist_ok=True)
     with open(metrics_file_path, "w") as f:
         json.dump({"loss": results[0], "error rate": results[1]}, f)
+
+    interp = ClassificationInterpretation.from_learner(learn)
+    cm_tensor = interp.confusion_matrix()
+    labels = learn.dls.vocab
+    save_confusion_matrix(cm_tensor, labels, reports_file_path)
 
 
 if __name__ == "__main__":
