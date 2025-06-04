@@ -54,6 +54,6 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
           uv run src/stages/data_load_train.py --config=params.yaml
-          cml comment create --pr --publish metrics.json
+          cml comment create --pr --publish reports/metrics.json
 
       - run: echo "🍏 This job's status is ${{ job.status }}."
