@@ -1,0 +1,25 @@
+dvc[s3]
+dvclive
+h5py
+ipykernel
+jupyter
+jupyter_contrib_nbextensions
+matplotlib
+numpy
+pandas
+pre-commit
+pylint
+pytest
+python-box
+pyyaml
+seaborn
+scikit-learn
+tqdm
+types-PyYAML
+--index-url https://download.pytorch.org/whl/cu128
+torch
+torcheval
+torchsummary
+torchvision
+
+fastai
