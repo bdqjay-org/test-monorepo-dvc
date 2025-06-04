@@ -40,6 +40,11 @@ jobs:
       - name: Install the project
         run: uv sync --locked --all-extras --dev
 
+      - name: Pull the raw data from S3
+        working-directory: bird_or_forest
+        run: |
+          uv run dvc pull
+
       - name: Run ML Pipeline
         working-directory: bird_or_forest
         run: |
