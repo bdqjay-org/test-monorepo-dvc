@@ -8,3 +8,6 @@ data_block:
   validation_size: 0.2
   img_resize_value: 192
   batch_size: 32
+
+train:
+  epochs: 1

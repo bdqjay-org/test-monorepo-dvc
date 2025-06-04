@@ -27,6 +27,7 @@ jobs:
         uses: astral-sh/setup-uv@v5
         with:
           version: "0.7.4"
+          enable-cache: true
 
       - name: Configure AWS credentials using OIDC
         uses: aws-actions/configure-aws-credentials@v4

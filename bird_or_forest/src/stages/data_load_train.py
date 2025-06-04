@@ -25,6 +25,7 @@ def data_load_train(config_path: Text) -> None:
     validation_split = config["data_block"]["validation_size"]
     img_resize_value = config["data_block"]["img_resize_value"]
     batch_size = config["data_block"]["batch_size"]
+    epochs = config["train"]["epochs"]
 
     dls = DataBlock(
         blocks=(ImageBlock, CategoryBlock),
@@ -35,7 +36,7 @@ def data_load_train(config_path: Text) -> None:
     ).dataloaders(raw_data_path, bs=batch_size)
 
     learn = vision_learner(dls, resnet18, metrics=error_rate)
-    learn.fine_tune(4)
+    learn.fine_tune(epochs)
 
     print("\n📈 Final Metrics on Validation Set:")
     results = learn.validate()
@@ -44,6 +45,7 @@ def data_load_train(config_path: Text) -> None:
 
     root = get_git_root()
     metrics_file_path = root / "bird_or_forest" / "reports" / "metrics.json"
+    metrics_file_path.parent.mkdir(parents=True, exist_ok=True)
     with open(metrics_file_path, "w") as f:
         json.dump({"loss": results[0], "error rate": results[1]}, f)
 
