@@ -14,7 +14,7 @@ from fastai.vision.all import Resize
 from fastai.vision.all import resnet18
 from fastai.vision.all import vision_learner
 
-from shared.src.utils import get_git_root
+from shared.utils import get_git_root
 
 
 def data_load_train(config_path: Text) -> None:
