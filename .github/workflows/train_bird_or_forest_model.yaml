@@ -6,6 +6,7 @@ on: [push]
 permissions:
   id-token: write
   contents: read
+  pull-requests: write
 
 jobs:
   Train-Bird-or-Forest-Model:
