@@ -1,4 +1,5 @@
 import argparse
+import json
 from typing import Text
 
 import yaml
@@ -12,6 +13,8 @@ from fastai.vision.all import RandomSplitter
 from fastai.vision.all import Resize
 from fastai.vision.all import resnet18
 from fastai.vision.all import vision_learner
+
+from shared.src.utils import get_git_root
 
 
 def data_load_train(config_path: Text) -> None:
@@ -38,6 +41,11 @@ def data_load_train(config_path: Text) -> None:
     results = learn.validate()
     print(f"  - Loss: {results[0]:.4f}")
     print(f"  - Error Rate: {results[1]:.4f}")
+
+    root = get_git_root()
+    metrics_file_path = root / "bird_or_forest" / "reports" / "metrics.json"
+    with open(metrics_file_path, "w") as f:
+        json.dump({"loss": results[0], "error rate": results[1]}, f)
 
 
 if __name__ == "__main__":
