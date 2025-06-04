@@ -1,0 +1,24 @@
+schema: '2.0'
+stages:
+  data_load_and_train:
+    cmd: python src/stages/data_load_train.py --config=params.yaml
+    deps:
+    - path: data/raw/bird_or_not
+      hash: md5
+      md5: cdf41743a2462a71292b44c285c210fb.dir
+      size: 11174780
+      nfiles: 356
+    - path: src/stages/data_load_train.py
+      hash: md5
+      md5: c1b39f889b93f057ee0fd8633ed1408e
+      size: 1683
+    params:
+      params.yaml:
+        base:
+          random_state: 42
+        data:
+          raw_data_path: data/raw
+        data_block:
+          validation_size: 0.2
+          img_resize_value: 192
+          batch_size: 32

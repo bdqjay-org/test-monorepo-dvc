@@ -1,0 +1,10 @@
+stages:
+  data_load_and_train:
+    cmd: python src/stages/data_load_train.py --config=params.yaml
+    deps:
+      - data/raw/bird_or_not
+      - src/stages/data_load_train.py
+    params:
+      - base
+      - data
+      - data_block

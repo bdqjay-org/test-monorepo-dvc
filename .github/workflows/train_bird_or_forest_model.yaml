@@ -1,0 +1,69 @@
+name: List S3 Buckets (uses OIDC)
+run-name: ${{ github.actor }} is using Github Actions!
+
+on: [push]
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  Train-Bird-or-Forest-Model:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by GitHub!"
+      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
+
+      - name: Check out the repo code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
+      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
+
+      - uses: iterative/setup-cml@v1
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.7.4"
+          enable-cache: true
+
+      - name: Configure AWS credentials using OIDC
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::097556382006:role/DummyAdmin
+          aws-region: eu-north-1
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: "./bird_or_forest/.python-version"
+
+      - name: Install the project
+        working-directory: bird_or_forest
+        run: uv sync --locked --all-extras --dev
+
+      - name: Pull the raw data from S3
+        working-directory: bird_or_forest
+        run: |
+          uv run dvc pull
+
+      - name: Run ML Pipeline
+        working-directory: bird_or_forest
+        run: |
+          uv run src/stages/data_load_train.py --config=params.yaml
+
+      - name: Comment with report in PR
+        working-directory: bird_or_forest
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cat reports/metrics.json >> report.md
+          echo '![](reports/confusion_matrix.png "Confusion Matrix")' >> report.md
+          cml comment create report.md
+
+      - run: echo "🍏 This job's status is ${{ job.status }}."
